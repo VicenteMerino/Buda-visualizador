@@ -1,0 +1,10 @@
+AllCops:
+  NewCops:
+    enable
+  Exclude:
+    - 'test/**/*'
+    - 'db/*'
+    - 'config/**/*'
+    - 'config.ru'
+    - 'bin/*'
+
