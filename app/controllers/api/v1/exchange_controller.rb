@@ -31,7 +31,8 @@ module Api
                      else
                        Date.today.strftime('%Y-%m-%d')
                      end
-          response = RestClient.get "https://api.coindesk.com/v1/bpi/historical/close.json?start=#{start_date}&end=#{end_date}"
+          response = RestClient.get "https://api.coindesk.com/v1/bpi/historical/close.json?start=#{start_date}&end=#{end_date}",
+                                    { content_type: :json, accept: :json }
           render json: { message: 'Error with external API', error: 404 } if response.code != 200
           serie_info = JSON.parse(response.body)['bpi']
           exchange_rates = { rates: [], market: params['market'] }
