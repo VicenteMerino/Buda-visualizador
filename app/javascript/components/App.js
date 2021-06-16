@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Dashboard from '../views/Dashboard';
 
-class App extends Component {
-    render() {
-        return <div>Hello world!</div>;
-    }
-}
+const App = () => {
+  return (
+    <Switch>
+      <Route exact path="/" component={Dashboard} />
+    </Switch>
+  );
+};
 
 export default App;
