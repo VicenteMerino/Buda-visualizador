@@ -62,3 +62,9 @@ gem 'rubocop', '~> 1.17'
 gem 'erb_lint', '~> 0.0.37'
 
 gem 'scss-lint', '~> 0.20.3'
+
+gem "rufo", "~> 0.13.0"
+
+gem "rest-client", "~> 2.1"
+
+gem "dotenv", "~> 2.7"
