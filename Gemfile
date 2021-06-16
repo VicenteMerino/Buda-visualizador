@@ -67,4 +67,4 @@ gem "rufo", "~> 0.13.0"
 
 gem "rest-client", "~> 2.1"
 
-gem "dotenv", "~> 2.7"
+gem "dotenv-rails", "~> 2.7"
