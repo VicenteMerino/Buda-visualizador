@@ -22,6 +22,7 @@ module Api
         orders = JSON.parse(response.body)['orders']
         market_orders = { orders: [] }
         orders.each do |order|
+          order['created_at'] = order['created_at'].to_time.strftime('%Y-%m-%d')
           market_orders[:orders] << order if (order['state'] == 'traded') && (order['price_type'] == 'market')
         end
         render json: market_orders

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
-import Dropdown from "../Dropdowns/Dropdown";
-import Navbar from "../Navbar/Navbar";
-import Orders from "../Orders/Orders";
+import Dropdown from "../components/Dropdowns/Dropdown";
+import Navbar from "../components/Navbar/Navbar";
+import Orders from "../components/Orders/Orders";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,9 +24,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OrdersDropdown = () => {
-  const [orders, setOrders] = useState([]);
 
+const Dashboard = () => {
+  const classes = useStyles();
+  const [orders, setOrders] = useState([]);
   useEffect(() => {
     axios
       .get("/api/v1/orders")
@@ -35,25 +36,19 @@ const OrdersDropdown = () => {
       })
       .catch((resp) => console.log(resp));
   }, [orders.length]);
-
-  return <Dropdown filter={"Orders"} options={orders} />;
-};
-
-const Visualizator = () => {
-  const classes = useStyles();
   return (
     <div>
       <Navbar />
       <div className={classes.root}>
         <div>
-          <OrdersDropdown />
+          <Dropdown filter={'options'} options={orders} />
         </div>
         <div className={classes.orders}>
-          <Orders />
+          <Orders orders={orders}/>
         </div>
       </div>
     </div>
   );
 };
 
-export default Visualizator;
+export default Dashboard;
