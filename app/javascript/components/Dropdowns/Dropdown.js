@@ -16,12 +16,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dropdown = ({ filter, options }) => {
+const Dropdown = ({ filter, options, onChange }) => {
   const classes = useStyles();
   const [option, setOption] = useState("");
-  const handleChange = (event) => {
-    setOption(event.target.value);
-  };
+  const handleChange = (e) => {
+    setOption(e.target.value)
+    onChange(e)
+  }
 
   return (
     <FormControl className={classes.formControl}>
@@ -35,13 +36,13 @@ const Dropdown = ({ filter, options }) => {
         <MenuItem value="" disabled>
           {filter}
         </MenuItem>
-        {options.map(({ created_at, id }) => (
-          <MenuItem value={created_at} key={id}>
-            {created_at}
+        {options.map(({ value, id }) => (
+          <MenuItem value={value} key={id}>
+            {value}
           </MenuItem>
         ))}
       </Select>
-      <FormHelperText>Placeholder</FormHelperText>
+      <FormHelperText>{filter}</FormHelperText>
     </FormControl>
   );
 };
@@ -49,6 +50,7 @@ const Dropdown = ({ filter, options }) => {
 Dropdown.propTypes = {
   filter: PropTypes.string,
   options: PropTypes.array,
+  onChange: PropTypes.func,
 };
 
 export default Dropdown;

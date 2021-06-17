@@ -13,7 +13,7 @@ module Api
           year = params.key?('year') ? params['year'] : Date.today.year
           response = RestClient.get "https://mindicador.cl/api/dolar/#{year}",
                                     { content_type: :json, accept: :json }
-          render json: { message: 'Error with external API', error: 404 } if response.code != 200
+          render json: { error: 'Error with external API', status: 404 }, status: 404 if response.code != 200
 
           serie_info = JSON.parse(response.body)['serie']
           exchange_rates = { rates: [], market: params['market'] }
@@ -33,7 +33,7 @@ module Api
                      end
           response = RestClient.get "https://api.coindesk.com/v1/bpi/historical/close.json?start=#{start_date}&end=#{end_date}",
                                     { content_type: :json, accept: :json }
-          render json: { message: 'Error with external API', error: 404 } if response.code != 200
+          render json: { error: 'Error with external API', status: 404 }, status: 404 if response.code != 200
           serie_info = JSON.parse(response.body)['bpi']
           exchange_rates = { rates: [], market: params['market'] }
           serie_info.each do |date, price|
@@ -41,7 +41,7 @@ module Api
           end
           render json: exchange_rates
         else
-          render json: { message: 'Invalid market parameters', error: 400 }
+          render json: { error: 'Invalid market parameters', status: 400 }, status: 400
         end
       end
     end
