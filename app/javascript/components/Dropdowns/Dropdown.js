@@ -18,27 +18,28 @@ const useStyles = makeStyles((theme) => ({
 
 const Dropdown = ({ filter, options, onChange }) => {
   const classes = useStyles();
-  const [option, setOption] = useState("");
+  const [option, setOption] = useState({name: "", value: ""});
   const handleChange = (e) => {
-    setOption(e.target.value)
-    onChange(e)
-  }
+    setOption(prevState => ({ ...prevState, value: e.target.value.value, name: e.target.value.name}))
+    console.log(option);
+    onChange(e);
+  };
 
   return (
     <FormControl className={classes.formControl}>
       <Select
-        value={option}
+        value={{name: option.name, value: option.value}}
         onChange={handleChange}
         displayEmpty
         className={classes.selectEmpty}
         inputProps={{ "aria-label": "Without label" }}
       >
-        <MenuItem value="" disabled>
+        <MenuItem value={{name: "", value: ""}} disabled>
           {filter}
         </MenuItem>
-        {options.map(({ value, id }) => (
-          <MenuItem value={value} key={id}>
-            {value}
+        {options.map(({ value, name, id }) => (
+          <MenuItem value={{name: name, value: value}} key={id}>
+            {name}
           </MenuItem>
         ))}
       </Select>
@@ -50,7 +51,7 @@ const Dropdown = ({ filter, options, onChange }) => {
 Dropdown.propTypes = {
   filter: PropTypes.string,
   options: PropTypes.array,
-  onChange: PropTypes.func,
+  onChange: PropTypes.func
 };
 
 export default Dropdown;
