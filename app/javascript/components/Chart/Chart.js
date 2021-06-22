@@ -4,22 +4,34 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import Dropdown from '../Dropdowns/Dropdown';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
-    margin: '0 auto',
-    padding: theme.spacing(2, 3),
-    backgroundColor: theme.palette.white,
-    fontFamily: 'Roboto',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: 15,
+    display: 'inline-flex',
+    'flex-direction': 'column',
+    margin: '3px 3px 3px 3px',
   },
   orders: {
-    maxWidth: '50%',
-    padding: theme.spacing(2, 3),
-    backgroundColor: '#ffffff',
-    borderRadius: '12px',
+    'text-align': 'center',
+    'margin-top': '1px',
+    'margin-bottom': '1px',
+  },
+  chart: {
+    backgroundColor: 'white',
+    display: 'inline-flex',
     border: '1px solid black',
+    'margin-top': '3px',
+    'margin-bottom': '3px',
+  },
+  negPerformance: {
+    color: 'red',
+  },
+  posPerformance: {
+    color: 'green',
+  },
+  performancePlaceHolder: {
+    'text-align': 'center',
+    'margin-top': '3px',
+    'margin-bottom': '3px',
   },
 }));
 
@@ -28,7 +40,7 @@ const Chart = () => {
   const [orderFilter, setOrderFilter] = useState('');
   const [orders, setOrders] = useState([]);
   const [orderPrice, setOrderPrice] = useState(null);
-  const [performance, setPerformance] = useState(null);
+  const [performance, setPerformance] = useState(0);
   const today = new Date().toISOString().split('T')[0];
 
   const classes = useStyles();
@@ -86,7 +98,6 @@ const Chart = () => {
       id: order.id,
     });
   }
-
   const height = 500;
   const width = 1000;
   const margin = {
@@ -135,27 +146,15 @@ const Chart = () => {
     .attr('stroke-linecap', 'round')
     .attr('d', line);
   return (
-    <div>
-      <div>
+    <div className={classes.root}>
+      <div className={classes.orders}>
         <Dropdown
           onChange={handleOrderFilterChange}
           filter="Órden"
           options={ordersDates}
         />
       </div>
-      <div>
-        <h1>
-          El rendimiento de tu inversión es:
-          {' '}
-          {performance && (
-          <span>
-            {performance}
-            %
-          </span>
-          )}
-        </h1>
-      </div>
-      <div>
+      <div className={classes.chart}>
         <svg width={width} height={height}>
           <g
             transform={`translate(0,${height - margin.bottom})`}
@@ -167,6 +166,16 @@ const Chart = () => {
           />
           <path className="line" />
         </svg>
+      </div>
+      <div className={classes.performancePlaceHolder}>
+        <h1>
+          El rendimiento de tu inversión es:
+          {' '}
+          <span className={performance >= 0 ? classes.posPerformance : classes.negPerformance}>
+            {performance}
+            %
+          </span>
+        </h1>
       </div>
     </div>
   );
