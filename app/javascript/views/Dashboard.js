@@ -11,6 +11,8 @@ const useStyles = makeStyles(() => ({
     fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: 15,
+    'margin-left': '300px',
+    'margin-top': '15c0px',
   },
 }));
 
