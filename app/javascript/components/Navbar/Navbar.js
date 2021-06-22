@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -15,7 +16,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
-import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 const drawerWidth = 240;
 
@@ -123,9 +124,9 @@ const Navbar = () => {
         <Divider />
         <List>
           {['Gráfico', 'Órdenes'].map((text, index) => (
-            <ListItem button key={text}>
+            <ListItem button key={text} component={Link} to={index % 2 == 0 ? '/dashboard' : '/'}>
               <ListItemIcon>
-                {index % 2 === 0 ? <ShowChartIcon /> : <ShoppingCartOutlinedIcon />}
+                {index % 2 === 0 ? <ShowChartIcon /> : <DashboardIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>

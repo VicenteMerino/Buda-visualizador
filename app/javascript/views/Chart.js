@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Navbar from '../components/Navbar/Navbar';
-import Orders from '../components/Orders/Orders';
+import Chart from '../components/Chart/Chart';
 
 const useStyles = makeStyles(() => ({
-  orders: {
+  chart: {
     fontFamily: 'Roboto',
     fontStyle: 'normal',
     fontWeight: 'bold',
@@ -17,19 +16,12 @@ const useStyles = makeStyles(() => ({
 
 const Dashboard = () => {
   const classes = useStyles();
-  const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
-    axios.get('http://localhost:3000/api/v1/orders').then((res) => {
-      setOrders(res.data.orders);
-    });
-  }, []);
 
   return (
     <div className={classes.root}>
       <Navbar />
-      <div className={classes.orders}>
-        <Orders orders={orders} />
+      <div className={classes.chart}>
+        <Chart />
       </div>
     </div>
   );
