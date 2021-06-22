@@ -1,39 +1,91 @@
 import React, { useEffect, useState } from "react";
 import * as d3 from "d3";
-import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import Dropdown from "../Dropdowns/Dropdown";
-import Orders from "../Orders/Orders";
-import getExchangeRates from "../../fetch/getExchangeRates";
-import getOrders from "../../fetch/getOrders";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: "0 auto",
+    padding: theme.spacing(2, 3),
+    backgroundColor: theme.palette.white,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: 15,
+  },
+  orders: {
+    maxWidth: "50%",
+    padding: theme.spacing(2, 3),
+    backgroundColor: "#ffffff",
+    borderRadius: "12px",
+    border: "1px solid black",
+  },
+}));
 
 const Chart = () => {
   const [prices, setPrices] = useState([]);
   const [orderFilter, setOrderFilter] = useState("");
   const [orders, setOrders] = useState([]);
   const [orderPrice, setOrderPrice] = useState(null);
+  const [performance, setPerformance] = useState(null);
   const today = new Date().toISOString().split("T")[0];
 
-  async function handleOrderFilterChange(e) {
-    setOrderFilter(e.target.value.name);
-    setOrderPrice(e.target.value.value);
-    if (orderFilter) {
-      getExchangeRates('btc-usd', orderFilter, today).then((res) => {
-        setPrices(res.json.rates);
-      });
+  const classes = useStyles();
+
+  const findOrderByDate = (orders, date) => {
+    for (let order of orders) {
+      if (order.created_at === date) {
+        return order;
+      }
     }
+  };
+
+  const handleOrderFilterChange = (e) => {
+    setOrderFilter(e.target.value);
   }
 
   useEffect(() => {
-    getOrders().then((res) => {
-      setOrders(res.json.orders);
+    if (orderFilter) {
+      const foundOrder = findOrderByDate(orders, orderFilter);
+      setOrderPrice(foundOrder.traded_amount[0]);
+      axios
+        .post("http://localhost:3000/api/v1/exchange-rates", {
+          market: "btc-usd",
+          end_date: today,
+          start_date: orderFilter,
+        })
+        .then((res) => {
+          setPrices(res.data.rates);
+        });
+    }
+  }, [orderFilter]);
+
+  useEffect(() => {
+    if (prices.length) {
+      setPerformance(
+        `${(
+          (100 * (prices[prices.length - 1].value - prices[0].value)) /
+          prices[0].value
+        ).toFixed(2)}`
+      );
+    }
+  }, [prices]);
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/v1/orders").then((res) => {
+      setOrders(res.data.orders);
     });
-  });
+  }, []);
 
   const ordersDates = [];
   for (const order of orders) {
-    ordersDates.push({ name: order.created_at, value: order.traded_amount[0], id: order.id });
+    ordersDates.push({
+      value: order.created_at,
+      id: order.id,
+    });
   }
+
   const height = 500;
   const width = 1000;
   const margin = { top: 20, right: 30, bottom: 30, left: 40 };
@@ -91,17 +143,25 @@ const Chart = () => {
           options={ordersDates}
         />
       </div>
-      <svg width={width} height={height}>
-        <g
-          transform={`translate(0,${height - margin.bottom})`}
-          className="xAxis"
-        ></g>
-        <g
-          transform={("transform", `translate(${margin.left},0)`)}
-          className="yAxis"
-        ></g>
-        <path className="line"></path>
-      </svg>
+      <div>
+        <h1>
+          El rendimiento de tu inversión es:{" "}
+          {performance && <span>{performance}%</span>}
+        </h1>
+      </div>
+      <div>
+        <svg width={width} height={height}>
+          <g
+            transform={`translate(0,${height - margin.bottom})`}
+            className="xAxis"
+          ></g>
+          <g
+            transform={("transform", `translate(${margin.left},0)`)}
+            className="yAxis"
+          ></g>
+          <path className="line"></path>
+        </svg>
+      </div>
     </div>
   );
 };

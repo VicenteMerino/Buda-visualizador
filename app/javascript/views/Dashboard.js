@@ -28,7 +28,7 @@ const Dashboard = () => {
   return (
     <div>
       <Navbar />
-      <div className={classes.root}>
+      <div>
         <div>
           <Chart />
         </div>
