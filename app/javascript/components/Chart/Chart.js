@@ -6,7 +6,6 @@ import Dropdown from '../Dropdowns/Dropdown';
 
 const useStyles = makeStyles(() => ({
   root: {
-    fontFamily: 'Roboto',
     display: 'inline-flex',
     'flex-direction': 'column',
     margin: '3px 3px 3px 3px',
